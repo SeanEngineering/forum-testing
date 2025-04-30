@@ -6,7 +6,7 @@ import {
   StyledWrapper,
 } from './TopBar.styled';
 import { Avatar } from '@mui/material';
-import { AccountBalance, CoronavirusSharp, Search } from '@mui/icons-material';
+import { AccountBalance, CloseOutlined, Search } from '@mui/icons-material';
 
 const TopBar = () => {
   return (
@@ -21,9 +21,8 @@ const TopBar = () => {
         <Avatar>
           <Search />
         </Avatar>
-        <Avatar sx={{ color: 'blue' }}>
-          <CoronavirusSharp />
-        </Avatar>
+
+        <CloseOutlined />
       </EndWrapper>
     </StyledWrapper>
   );
