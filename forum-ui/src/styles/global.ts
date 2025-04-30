@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
 export const PageWrapper = styled.div`
-  height: 90vh;;
-  width: 90vw;
+display: flex;
+align-items: center;
+justify-content: center;
+  min-height: 90vh;
+  min-width: 98vw;
 
 `

@@ -4,7 +4,11 @@ import CommunityCard from './components/communityCard/CommunityCard';
 import TabPanel from './components/tabPanel/TabPanel';
 import { VerticalAttachmentIcon } from './components/postBar/PostBar.styled';
 import { LabelWrapper } from './components/tabPanel/styles';
-import { CommentBankOutlined, ForumOutlined } from '@mui/icons-material';
+import {
+  CommentBankOutlined,
+  ForumOutlined,
+  SpeakerOutlined,
+} from '@mui/icons-material';
 import Posts from './sections/posts/Posts';
 
 const Forum = () => {
@@ -53,6 +57,15 @@ const Forum = () => {
               }
               {...a11yProps(2)}
             />
+            <Tab
+              label={
+                <LabelWrapper>
+                  <SpeakerOutlined sx={{ height: 20 }} />
+                  Announcements
+                </LabelWrapper>
+              }
+              {...a11yProps(3)}
+            />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -63,6 +76,9 @@ const Forum = () => {
         </TabPanel>
         <TabPanel value={value} index={2}>
           Item Three
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          Item Four
         </TabPanel>
       </Box>
     </Card>
