@@ -21,7 +21,6 @@ const TopBar = () => {
         <Avatar>
           <Search />
         </Avatar>
-
         <CloseOutlined />
       </EndWrapper>
     </StyledWrapper>

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: journeyman-api
+  datasource:
+    url:
+  liquibase:
+    change-log: classpath:db/changelog/changes/db.changelog-master.yaml

@@ -1,0 +1,72 @@
+- hosts: rpi
+  become: true
+
+  vars:
+    postgres_version: 13
+    db_name: journeyman
+    db_user: journeyman_user
+    db_password: postgres
+    allowed_subnet: 192.168.1.0/24
+
+  tasks:
+    - name: Install PostgreSQL
+      apt:
+        name:
+          - postgresql
+          - postgresql-contrib
+        update_cache: yes
+
+    - name: Ensure PostgreSQL is started and enabled
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    - name: Manually create the initial virtualenv
+      command:
+        cmd: virtualenv /user/home/venvs/myenv -p python3.11
+        creates: '/user/home/venvs/myenv'
+    - name: Install psycopg2 via pip
+      pip:
+        name: psycopg2-binary
+        virtualenv: virtualenv
+
+    - name: Install Python PostgreSQL driver (psycopg2)
+      apt:
+        name: python3-psycopg2
+        state: present
+        update_cache: yes
+
+    - name: Create PostgreSQL user
+      become: true
+      become_user: pi-user
+      postgresql_user:
+        name: '{{ db_user }}'
+        password: '{{ db_password }}'
+        encrypted: yes
+
+    - name: Create PostgreSQL database (if not exists)
+      become: true
+      become_user: pi-user
+      shell: |
+        psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = '{{ db_name }}'" | grep -q 1 || \
+        psql -U postgres -c "CREATE DATABASE {{ db_name }} OWNER {{ db_user }};"
+      environment:
+        PGPASSWORD: '{{ db_password }}'
+
+    - name: Allow remote connections in postgresql.conf
+      lineinfile:
+        path: '/etc/postgresql/{{ postgres_version }}/main/postgresql.conf'
+        regexp: "^#?listen_addresses\\s*="
+        line: "listen_addresses = '*'"
+
+    - name: Allow connections from local subnet in pg_hba.conf
+      lineinfile:
+        path: '/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf'
+        line: 'host    all             all             {{ allowed_subnet }}            md5'
+        insertafter: EOF
+
+    - name: Restart PostgreSQL to apply config changes
+      service:
+        name: postgresql
+        state: restarted

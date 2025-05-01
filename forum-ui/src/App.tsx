@@ -1,16 +1,24 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import Home from './pages/home/Home';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { PageWrapper, TopSection } from './styles/global';
 import Navbar from './components/navbar/Navbar';
+import { routes } from './routes/routes';
 
 function App() {
+  const location = useLocation();
   return (
     <PageWrapper>
-      <TopSection />
-      <Navbar />
+      {!location.pathname.includes('signin') && (
+        <>
+          <TopSection />
+          <Navbar />
+        </>
+      )}
+
       <Routes>
-        <Route path='/' element={<Home />} />
+        {routes.map((item) => {
+          return <Route {...item} />;
+        })}
       </Routes>
     </PageWrapper>
   );
